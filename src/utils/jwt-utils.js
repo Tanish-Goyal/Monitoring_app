@@ -5,7 +5,7 @@ const jwtUtils = {
   createToken: (data) => {
     return jwt.sign({
       userId: data,
-    }, config.SECRET_KEY, {expiresIn: 60 * 60});
+    }, config.SECRET_KEY, {expiresIn: '7d'});
   },
 
   validateToken: (token) => {

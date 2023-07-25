@@ -1,10 +1,13 @@
 const db = require('../database/mongo');
 
-const app = db.model('project',
+const app = db.model('app',
     {  
+        cronString: String,
+        readableCron: String,
+        description: String,
         projectId: String,
         appName: String,
-        createdAt: String
+        createdAt: String,
     }
 );
 

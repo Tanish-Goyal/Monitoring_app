@@ -4,6 +4,7 @@ const appService = {
     createApp: async (appData)=>{
         const app = new AppModel(appData)
         await app.save()
+        return app.id;
     },
 
     deleteApp: async (appId)=>{
@@ -11,7 +12,7 @@ const appService = {
     },
 
     getApp: async(appId)=>{
-        var app = await AppModel.findOne(appId)
+        var app = await AppModel.findById(appId)
         return app
     },
 

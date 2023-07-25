@@ -22,9 +22,11 @@ router.use((req, res, next) => {
 
 router.put('', async (req, res)=>{
   try {
+    const token = req.header.authorization;
+    const userinfo = jwtUtils.validateToken(token);
     const projectInfo = req.body;
-    await projectService.createProject(projectInfo);
-    res.sendStatus(201);
+    const projectId = await projectService.createProject(projectInfo,userinfo.userId);
+    res.status(201).send(projectId);
   } catch (err) {
     logger.error(err);
     res.status(500).send(err.message);
