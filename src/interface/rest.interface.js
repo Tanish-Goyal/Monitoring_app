@@ -4,6 +4,11 @@ const config = require('../utils/config');
 const express = require('express');
 const logger = require('../utils/logger');
 const authController = require('../controller/auth.controller');
+const appController = require('../controller/app.controller')
+const projectController = require('../controller/project.controller');
+const bundleController = require('../controller/bundle.controller');
+const reportController = require('../controller/report.controller');
+const specController = require('../controller/spec.controller');
 const app = express();
 const port = config.SERVER_PORT;
 app.use(express.json());
@@ -22,6 +27,11 @@ app.use((err, req, res, next) => {
 });
 
 app.use('/auth', authController);
+app.use('/app',appController);
+app.use('/project',projectController);
+app.use('/report',reportController);
+app.use('/spec',specController);
+app.use('/bundle',bundleController);
 
 const startRestServer = ()=>{
   app.listen(port, () => {

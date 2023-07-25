@@ -37,6 +37,7 @@ router.get('/:reportId', async (req, res) => {
 
 router.get('/', async (req, res) => {
   try {
+    // eslint-disable-next-line no-undef
     const appId = parseInt(req.query.appId) || None;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
