@@ -1,6 +1,6 @@
 const rediskeys = {
-  preComputedFeed: (user)=>{
-    return `precomputedfeed:${user}`;
+  freshBundles: ()=>{
+    return `freshbundles`;
   },
 };
 
