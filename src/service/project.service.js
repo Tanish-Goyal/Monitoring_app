@@ -4,6 +4,7 @@ const projectService = {
     createProject: async (ProjectData)=>{
         const project = new ProjectModel(ProjectData)
         await project.save()
+        return project.id;
     },
 
     deleteProject: async (ProjectId)=>{
@@ -11,7 +12,7 @@ const projectService = {
     },
 
     getProject: async(projectId)=>{
-        var project = await ProjectModel.findOne(projectId)
+        var project = await ProjectModel.findById(projectId)
         return project
     },
 
