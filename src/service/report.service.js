@@ -18,8 +18,29 @@ const reportService = {
   getReportList: async (appId, page, limit) => {
     const reports = await ReportModel.find({appId:appId}).skip((page-1)*limit).limit(limit).exec();
     return reports;
+  },
+  
+  getUniqueHostNames: async (appId) => {
+  
+    const uniqueHostNames = await ReportModel.aggregate([
+      {
+        $match: { appId: appId }, // match result with appId
+      },
+      {
+        $group: {
+          _id: '$hostName', // group by the 'hostName' field
+        },
+      },
+      {
+        $project: {
+          _id: 0, // Exclude the '_id' field from the output
+          hostName: '$_id', // Rename the '_id' field to 'hostName'
+        },
+      },
+    ]);
   }
-//   GET /specs?page=1&limit=10
+
+
 };
 
 module.exports = reportService;

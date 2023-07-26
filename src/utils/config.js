@@ -7,6 +7,8 @@ const config = {
   SERVER_PORT: process.env.PORT || 4200,
   SECRET_KEY: process.env.SECRET_KEY || 'JAI__MATA__DI',
   REDIS_URL: process.env.REDIS_URL || 'redis://default:redispw@localhost:6379',
+  UPLOAD_PATH: process.env.UPLOAD_PATH || '/uploads',
+  PROCESSED_PATH: process.env.PROCESSED_PATH || '/unzipped'
 };
 
 module.exports = config;

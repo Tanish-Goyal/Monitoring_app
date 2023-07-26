@@ -37,8 +37,7 @@ router.get('/:reportId', async (req, res) => {
 
 router.get('/', async (req, res) => {
   try {
-    // eslint-disable-next-line no-undef
-    const appId = parseInt(req.query.appId) || None;
+    const appId = req.query.appId || null;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const reports = await reportService.getReportList(appId, page, limit);
@@ -48,5 +47,23 @@ router.get('/', async (req, res) => {
     res.status(500).send(err.message);
   }
 });
+
+router.get('/hosts', async (req, res) => {
+  try {
+    const appId = req.query.appId || null;
+    const hostnameList = await reportService.getUniqueHostNames(appId);
+    
+    const hostsInfo = {
+      "hostnameList": hostnameList,
+      "count": hostnameList.length
+    };
+    res.send(hostsInfo);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err.message);
+  }
+});
+
 
 module.exports = router;
