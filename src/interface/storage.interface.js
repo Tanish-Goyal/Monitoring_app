@@ -2,8 +2,8 @@ const multer = require('multer');
 const Constants = require('../utils/constants');
 
 const multerStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, Constants.uploadPath());
+    destination: async (req, file, cb) => {
+      cb(null, await Constants.uploadPath());
     },
     filename: (req, file, cb) => {
       cb(null, file.originalname);
