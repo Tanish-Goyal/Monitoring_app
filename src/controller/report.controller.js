@@ -66,5 +66,19 @@ router.get('/hosts', async (req, res) => {
   }
 });
 
+router.get('/hosts/:hostname', async (req, res) => {
+  try {
+    const hostname = req.params.hostname;
+    const appId = req.query.appId || null;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const report = await reportService.getReportsByHostName(appId, hostname, page, limit);
+    res.json(report);
+
+  } catch (err) {
+    logger.error(err);
+    res.status(500).send(err.message);
+  }
+});
 
 module.exports = router;

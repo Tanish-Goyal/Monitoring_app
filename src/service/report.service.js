@@ -38,8 +38,12 @@ const reportService = {
         },
       },
     ]);
-  }
+  },
 
+  getReportsByHostName: async (appId, hostName, page, limit) => {
+    const reports = await ReportModel.find({appId:appId,hostName:hostName}).skip((page-1)*limit).limit(limit).exec();
+    return reports;
+  },
 
 };
 

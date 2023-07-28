@@ -9,7 +9,7 @@ const FolderReportSchema = new db.Schema({
   folderCount: Number,
   logFileCount: Number,
   logFilePaths: [String],
-  error: String,
+  error: String
 });
 
 const FileReportSchema = new db.Schema({
@@ -17,7 +17,7 @@ const FileReportSchema = new db.Schema({
   name: String,
   description: String,
   size: Number,
-  error: String,
+  error: String
 });
 
 const CommandReportSchema = new db.Schema({
@@ -25,7 +25,7 @@ const CommandReportSchema = new db.Schema({
   name: String,
   description: String,
   output: String,
-  error: String,
+  error: String
 });
 
 const ReportSchema = new db.Schema({
@@ -36,7 +36,7 @@ const ReportSchema = new db.Schema({
   hostName: String,
   folderReports: [FolderReportSchema],
   fileReports: [FileReportSchema],
-  commandReports: [CommandReportSchema],
+  commandReports: [CommandReportSchema]
 });
 const ReportModel = db.model('Report', ReportSchema);
 
