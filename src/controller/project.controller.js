@@ -22,7 +22,7 @@ router.use((req, res, next) => {
 
 router.put('', async (req, res)=>{
   try {
-    const token = req.header.authorization;
+    const token = req.headers.authorization;
     const userinfo = jwtUtils.validateToken(token);
     const projectInfo = req.body;
     const projectId = await projectService.createProject(projectInfo,userinfo.userId);
