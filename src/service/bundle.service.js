@@ -1,9 +1,11 @@
 const redisClient = require('../database/redis')
-const rediskeys = require('../utils/redis.keys')
+const rediskeys = require('../utils/redis.keys');
+const processService = require('./process.service');
 
 const bundleservice = {
     bundleUploadNotifier: async (bundleName)=>{
-        await redisClient.publish(rediskeys.freshBundles(),bundleName);
+        processService.untar(bundleName)
+        //await redisClient.publish(rediskeys.freshBundles(),bundleName);
     }
 }
 
