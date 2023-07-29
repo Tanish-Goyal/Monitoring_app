@@ -1,9 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const logger = require('../utils/logger');
+const jwtUtils = require('../utils/jwt-utils');
 const reportService = require('../service/report.service');
 
-router.put('/', async (req, res) => {
+router.use((req, res, next) => {
+  try {
+    const token = req.headers.authorization;
+    const userinfo = jwtUtils.validateToken(token);
+    if (userinfo) {
+      // Log an info message for each incoming request
+      logger.info(`Received a request for ${req.url} from ${userinfo.userId}`);
+      next();
+    } else {
+      res.status(401).send();
+    }
+  } catch (err) {
+    res.status(401).send(err.message);
+  }
+});
+
+router.put('', async (req, res) => {
   try {
     const reportData = req.body;
     await reportService.createReport(reportData);
@@ -25,6 +42,40 @@ router.delete('/:reportId', async (req, res) => {
   }
 });
 
+router.get('/hosts', async (req, res) => {
+  try {
+    const appId = req.query.appId || null;
+    const hostnameList = await reportService.getUniqueHostNames(appId);
+    
+    const hostsInfo = {
+      "hostnameList": "hostnameList",
+      "count": "hostnameList.length"
+    };
+    console.log(hostsInfo);
+    res.json(hostnameList);
+
+  } catch (err) {
+    logger.error(err);
+    res.status(500).send(err.message);
+  }
+});
+
+router.get('/hosts/:hostname', async (req, res) => {
+  try {
+    const hostname = req.params.hostname;
+    const appId = req.query.appId || null;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const reports = await reportService.getReportList(appId, page, limit, hostname);
+    res.json(reports);
+
+  } catch (err) {
+    logger.error(err);
+    res.status(500).send(err.message);
+  }
+}
+);
+
 router.get('/:reportId', async (req, res) => {
   try {
     const reportId = req.params.reportId;
@@ -36,7 +87,7 @@ router.get('/:reportId', async (req, res) => {
   }
 });
 
-router.get('/', async (req, res) => {
+router.get('', async (req, res) => {
   try {
     const appId = req.query.appId || null;
     const page = parseInt(req.query.page) || 1;
@@ -48,23 +99,5 @@ router.get('/', async (req, res) => {
     res.status(500).send(err.message);
   }
 });
-
-router.get('/hosts', async (req, res) => {
-  try {
-    const appId = req.query.appId || null;
-    const hostnameList = await reportService.getUniqueHostNames(appId);
-    
-    const hostsInfo = {
-      "hostnameList": hostnameList,
-      "count": hostnameList.length
-    };
-    res.send(hostsInfo);
-
-  } catch (err) {
-    logger.error(err);
-    res.status(500).send(err.message);
-  }
-});
-
 
 module.exports = router;

@@ -15,32 +15,51 @@ const reportService = {
     return report;
   },
   
-  getReportList: async (appId, page, limit) => {
-    const reports = await ReportModel.find({appId:appId}).skip((page-1)*limit).limit(limit).exec();
-    return reports;
-  },
-  
   getUniqueHostNames: async (appId) => {
   
     const uniqueHostNames = await ReportModel.aggregate([
       {
-        $match: { appId: appId }, // match result with appId
+        $match: { appId: appId },
       },
       {
         $group: {
-          _id: '$hostName', // group by the 'hostName' field
-        },
+          _id: null,
+          hostNames: { $addToSet: '$hostName' },
+        }
       },
-      {
-        $project: {
-          _id: 0, // Exclude the '_id' field from the output
-          hostName: '$_id', // Rename the '_id' field to 'hostName'
+    ]);    
+    return uniqueHostNames[0].hostNames;
+  },
+
+  getReportList: async (appId, page, limit, hostName) => {
+    
+    if ( hostName == undefined){
+      var reports = await ReportModel.find({appId:appId}).skip((page-1)*limit).limit(limit).exec();
+    }
+    else {
+      var reports = await ReportModel.find({appId:appId,hostName:hostName}).skip((page-1)*limit).limit(limit).exec();
+    }
+
+    return reports;
+  },
+  
+  updateReportStatus: async (bundleName, newStatus) => {
+  
+      const updatedReport = await ReportModel.findOneAndUpdate(
+        { 
+          bundleName: bundleName
         },
-      },
-    ]);
-  }
-
-
+        { 
+          $set: { status: newStatus }
+        },
+        { 
+          new: true
+        }
+      );
+    
+      return updatedReport;
+    } 
+  
 };
 
 module.exports = reportService;
