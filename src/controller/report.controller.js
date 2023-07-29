@@ -48,11 +48,11 @@ router.get('/hosts', async (req, res) => {
     const hostnameList = await reportService.getUniqueHostNames(appId);
     
     const hostsInfo = {
-      "hostnameList": "hostnameList",
-      "count": "hostnameList.length"
+      "hostnameList": hostnameList,
+      "count": hostnameList.length
     };
-    console.log(hostsInfo);
-    res.json(hostnameList);
+    // console.log(hostsInfo);
+    res.json(hostsInfo);
 
   } catch (err) {
     logger.error(err);

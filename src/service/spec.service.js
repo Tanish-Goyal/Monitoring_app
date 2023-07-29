@@ -10,11 +10,26 @@ const specService = {
     await Spec.findByIdAndDelete(specId);
   },
 
-  getSpec: async (specId) => {
+  getSpecBySpecId: async (specId) => {
     const spec = await Spec.findById(specId);
     return spec;
   },
-  
+
+  getSpecId: async (appId) => {
+    
+    const SpecId = await Spec.aggregate([
+      {
+        $match: { appId: appId },
+      },
+      {
+        $group: {
+          _id: null,
+          specId: { $addToSet: '$_id' },
+        }
+      },
+    ]);    
+    return SpecId[0].specId;
+  },
 };
 
 module.exports = specService;
