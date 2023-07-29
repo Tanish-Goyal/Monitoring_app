@@ -64,7 +64,7 @@ router.get('/hosts/:hostname', async (req, res) => {
   try {
     const hostname = req.params.hostname;
     const appId = req.query.appId || null;
-    const page = parseInt(req.query.page) || 1;
+    const page = parseInt(req.query.page) || 0;
     const limit = parseInt(req.query.limit) || 10;
     const reports = await reportService.getReportList(appId, page, limit, hostname);
     res.json(reports);
@@ -90,7 +90,7 @@ router.get('/:reportId', async (req, res) => {
 router.get('', async (req, res) => {
   try {
     const appId = req.query.appId || null;
-    const page = parseInt(req.query.page) || 1;
+    const page = parseInt(req.query.page) || 0;
     const limit = parseInt(req.query.limit) || 10;
     const reports = await reportService.getReportList(appId, page, limit);
     res.json(reports);

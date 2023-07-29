@@ -57,7 +57,7 @@ router.get("/:appId", async(req,res)=>{
 router.get("",async(req,res)=>{
     try{
         var projectId = req.query.projectId;
-        const page = parseInt(req.query.page) || 1;
+        const page = parseInt(req.query.page) || 0;
         const limit = parseInt(req.query.limit) || 10;
         var projects = await appService.getAppList(projectId, page, limit)
         res.json(projects)

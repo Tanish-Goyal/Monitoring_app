@@ -60,7 +60,7 @@ router.get("",async(req,res)=>{
     try{
         const token = req.headers.authorization;
         const userInfo = jwtUtils.validateToken(token);
-        const page = parseInt(req.query.page) || 1;
+        const page = parseInt(req.query.page) || 0;
         const limit = parseInt(req.query.limit) || 10;
         var projects = await projectService.getProjectList(userInfo.userId, page, limit)
         res.json(projects)

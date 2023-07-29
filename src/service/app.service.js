@@ -17,7 +17,7 @@ const appService = {
     },
 
     getAppList: async(projectId, page, limit)=>{
-        var apps = await AppModel.find({projectId:projectId}).skip((page-1)*limit).limit(limit).exec()
+        var apps = await AppModel.find({projectId:projectId}).skip(page).limit(limit).exec()
         return apps
     }
     
