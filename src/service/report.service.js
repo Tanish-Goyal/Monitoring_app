@@ -31,16 +31,42 @@ const reportService = {
     return uniqueHostNames[0].hostNames;
   },
 
-  getReportList: async (appId, page, limit, hostName) => {
-    
+  getReportList: async (appId, page, limit,bundleStatus, hostName) => {
+    var filterObject = {};
     if ( hostName == undefined){
-      var reports = await ReportModel.find({appId:appId}).skip(page).limit(limit).exec();
+      if( bundleStatus == undefined){
+        filterObject = {appId:appId};
+      }
+      else{
+        filterObject = {appId:appId, bundleStatus:bundleStatus};
+      }
     }
     else {
-      var reports = await ReportModel.find({appId:appId,hostName:hostName}).skip(page).limit(limit).exec();
+      if( bundleStatus == undefined){
+        filterObject = {appId:appId, hostName:hostName};
+      }
+      else{
+        filterObject = {appId:appId, bundleStatus:bundleStatus, hostName:hostName};
+      }
     }
+    const reports = await ReportModel.aggregate([
+      {
+        $match: filterObject,
+      },
+      {
+        $facet: {
+          totalCount: [{ $count: 'count' }],
+          reportList: [{ $skip: page }, { $limit: limit }],
+        },
+      },
+    ]);
 
-    return reports;
+    const reportsData = {
+      count: reports[0].totalCount[0]?.count || 0,
+      reportList: reports[0].reportList
+    } 
+
+    return reportsData;
   },
   
   updateReportStatus: async (bundleName, newStatus) => {
