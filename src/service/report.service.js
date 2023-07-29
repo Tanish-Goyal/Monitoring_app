@@ -69,6 +69,21 @@ const reportService = {
     return reportsFinalData;
   },
   
+  getRecentReports: async (appId, numberOfReports, hostName) => {
+    var filterObject = {};
+
+    if( hostName == undefined){
+      filterObject = {appId:appId};
+    }
+    else{
+      filterObject = {appId:appId,hostName:hostName};
+    }
+
+    const reports = await ReportModel.find(filterObject).sort({_id:-1}).limit(numberOfReports).exec();
+    
+    return reports;
+  },
+
   updateReportStatus: async (bundleName, newStatus) => {
       const updatedReport = await ReportModel.findOneAndUpdate(
         { 

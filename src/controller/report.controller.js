@@ -90,6 +90,21 @@ router.get('/hosts/:hostname', async (req, res) => {
 }
 );
 
+router.get('/recent', async (req, res) => {
+  try {
+    const hostName = req.query.hostName || undefined;
+    const appId = req.query.appId || undefined;
+    const numberOfReports = parseInt(req.query.recent) || 5;
+    const reports = await reportService.getRecentReports(appId, numberOfReports, hostName);
+    res.json(reports);
+
+  } catch (err) {
+    logger.error(err);
+    res.status(500).send(err.message);
+  }
+}
+);
+
 router.get('/:reportId', async (req, res) => {
   try {
     const reportId = req.params.reportId;
