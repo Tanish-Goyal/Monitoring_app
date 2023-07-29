@@ -33,6 +33,7 @@ const ReportSchema = new db.Schema({
   specId: String,
   generatedAt: String,
   bundleName: String,
+  bundleStatus: String,
   hostName: String,
   folderReports: [FolderReportSchema],
   fileReports: [FileReportSchema],

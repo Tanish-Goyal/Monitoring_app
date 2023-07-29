@@ -15,57 +15,30 @@ const reportService = {
     return report;
   },
   
-  getReportList: async (appId, page, limit) => {
-    const reports = await ReportModel.find({appId:appId}).skip((page-1)*limit).limit(limit).exec();
-    return reports;
-  },
-  
   getUniqueHostNames: async (appId) => {
   
     const uniqueHostNames = await ReportModel.aggregate([
       {
-        $match: { appId: appId }, // match result with appId
+        $match: { appId: appId },
       },
       {
         $group: {
-          _id: null, // Use null to group all results as a single group
-          hostNames: { $addToSet: '$hostName' }, // Collect unique hostNames in an array
+          _id: null,
+          hostNames: { $addToSet: '$hostName' },
         }
       },
-      // {
-      //   $group: {
-      //     _id: '$hostName', // group by the 'hostName' field
-      //   },
-      // },
-      // {
-      //   $project: {
-      //     _id: 0, // Exclude the '_id' field from the output
-      //     hostName: '$_id', // Rename the '_id' field to 'hostName'
-      //   },
-      // },
     ]);    
     return uniqueHostNames[0].hostNames;
   },
 
-  getReportsByHostName: async (appId, hostName, page, limit) => {
-    const reports = await ReportModel.find({appId:appId,hostName:hostName}).skip((page-1)*limit).limit(limit).exec();
-    return reports;
-  },
-
-  getReportList1: async (appId, page, limit, hostName) => {
+  getReportList: async (appId, page, limit, hostName) => {
     
     if ( hostName == undefined){
       var reports = await ReportModel.find({appId:appId}).skip((page-1)*limit).limit(limit).exec();
-      console.log("First",reports);
     }
     else {
       var reports = await ReportModel.find({appId:appId,hostName:hostName}).skip((page-1)*limit).limit(limit).exec();
-      console.log("Hostname: ",hostName);
-      console.log(reports);
-    
     }
-    console.log("-----------------------------------")
-    console.log(reports);
 
     return reports;
   },
@@ -87,8 +60,6 @@ const reportService = {
       return updatedReport;
     } 
   
-  
-
 };
 
 module.exports = reportService;
