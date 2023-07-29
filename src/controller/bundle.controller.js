@@ -20,7 +20,7 @@ router.use((req, res, next) => {
     }
   });
 
-router.put('', upload.single('file'),async (req, res)=>{
+router.post('', upload.single('file'),async (req, res)=>{
   try {
     if(!req.file){
         return res.status(400).json({ error: 'No file provided' });
