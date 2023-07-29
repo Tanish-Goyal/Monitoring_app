@@ -20,7 +20,18 @@ router.use((req, res, next) => {
   }
 });
 
-router.put('/', async (req, res) => {
+router.get('', async (req, res) => {
+  try {
+    const appId = req.query.appId;
+    const specId = await specService.getSpecId(appId);
+    res.json(specId);
+  } catch (err) {
+    logger.error(err);
+    res.status(500).send(err.message);
+  }
+});
+
+router.put('', async (req, res) => {
   try {
     const specInfo = req.body;
     await specService.createSpec(specInfo);
@@ -45,7 +56,7 @@ router.delete('/:specId', async (req, res) => {
 router.get('/:specId', async (req, res) => {
   try {
     const specId = req.params.specId;
-    const spec = await specService.getSpec(specId);
+    const spec = await specService.getSpecBySpecId(specId);
     res.json(spec);
   } catch (err) {
     logger.error(err);
@@ -53,14 +64,6 @@ router.get('/:specId', async (req, res) => {
   }
 });
 
-// router.get('/', async (req, res) => {
-//   try {
-//     const specs = await specService.getSpecList();
-//     res.json(specs);
-//   } catch (err) {
-//     logger.error(err);
-//     res.status(500).send(err.message);
-//   }
-// });
+
 
 module.exports = router;
