@@ -23,12 +23,13 @@ router.use((req, res, next) => {
 router.put('', async (req, res)=>{
   try {
     const appInfo = req.body;
-    await appService.createApp(appInfo);
-    res.sendStatus(201);
+    const appId = await appService.createApp(appInfo);
+    res.status(201).send(appId);
   } catch (err) {
     logger.error(err);
     res.status(500).send(err.message);
   }
+  
 });
 
 router.delete('/:appId', async (req, res)=>{
