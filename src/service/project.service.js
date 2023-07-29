@@ -17,7 +17,7 @@ const projectService = {
     },
 
     getProjectList: async(userId, page, limit)=>{
-        var projects = await ProjectModel.find({userId:userId}).skip((page-1)*limit).limit(limit).exec()
+        var projects = await ProjectModel.find({userId:userId}).skip(page).limit(limit).exec()
         return projects
     }
 

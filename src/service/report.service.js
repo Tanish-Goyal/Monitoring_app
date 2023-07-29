@@ -34,10 +34,10 @@ const reportService = {
   getReportList: async (appId, page, limit, hostName) => {
     
     if ( hostName == undefined){
-      var reports = await ReportModel.find({appId:appId}).skip((page-1)*limit).limit(limit).exec();
+      var reports = await ReportModel.find({appId:appId}).skip(page).limit(limit).exec();
     }
     else {
-      var reports = await ReportModel.find({appId:appId,hostName:hostName}).skip((page-1)*limit).limit(limit).exec();
+      var reports = await ReportModel.find({appId:appId,hostName:hostName}).skip(page).limit(limit).exec();
     }
 
     return reports;
