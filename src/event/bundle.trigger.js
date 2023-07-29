@@ -4,10 +4,12 @@ const redisClient = require('redis').createClient({
   url: config.REDIS_URL
 })
 redisClient.connect()
-const processService = require('../service/process.service')
+const processService = require('../service/process.service');
+const reportService = require('../service/report.service');
 const onMessage = async (bundleName) => {
   try{
     await processService.untar(bundleName);
+    reportService.updateReportStatus(bundleName,"processed")
   }catch(err){
     logger.error(err)
   }

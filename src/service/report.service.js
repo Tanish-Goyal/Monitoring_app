@@ -32,19 +32,18 @@ const reportService = {
   },
 
   getReportList: async (appId, page, limit, hostName) => {
-    
+    var reports = undefined;
     if ( hostName == undefined){
-      var reports = await ReportModel.find({appId:appId}).skip(page).limit(limit).exec();
+      reports = await ReportModel.find({appId:appId}).skip((page-1)*limit).limit(limit).exec();
     }
     else {
-      var reports = await ReportModel.find({appId:appId,hostName:hostName}).skip(page).limit(limit).exec();
+      reports = await ReportModel.find({appId:appId,hostName:hostName}).skip((page-1)*limit).limit(limit).exec();
     }
 
     return reports;
   },
   
   updateReportStatus: async (bundleName, newStatus) => {
-  
       const updatedReport = await ReportModel.findOneAndUpdate(
         { 
           bundleName: bundleName
