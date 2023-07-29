@@ -49,7 +49,7 @@ const reportService = {
         filterObject = {appId:appId, bundleStatus:bundleStatus, hostName:hostName};
       }
     }
-    const reports = await ReportModel.aggregate([
+    const reportsRawData = await ReportModel.aggregate([
       {
         $match: filterObject,
       },
@@ -61,16 +61,15 @@ const reportService = {
       },
     ]);
 
-    const reportsData = {
-      count: reports[0].totalCount[0]?.count || 0,
-      reportList: reports[0].reportList
+    const reportsFinalData = {
+      count: reportsRawData[0].totalCount[0]?.count || 0,
+      reportList: reportsRawData[0].reportList
     } 
 
-    return reportsData;
+    return reportsFinalData;
   },
   
   updateReportStatus: async (bundleName, newStatus) => {
-  
       const updatedReport = await ReportModel.findOneAndUpdate(
         { 
           bundleName: bundleName
