@@ -1,4 +1,4 @@
 const channels = {
-  newPostNotifierChannel: 'NEW_POST_NOTIFIER',
+  newBundleNotifierChannel: 'NEW_BUNDLE_NOTIFIER',
 };
 module.exports= channels;
