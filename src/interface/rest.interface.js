@@ -3,6 +3,7 @@
 const config = require('../utils/config');
 const express = require('express');
 const logger = require('../utils/logger');
+const cors = require('cors')
 const authController = require('../controller/auth.controller');
 const appController = require('../controller/app.controller')
 const projectController = require('../controller/project.controller');
@@ -10,6 +11,7 @@ const bundleController = require('../controller/bundle.controller');
 const reportController = require('../controller/report.controller');
 const specController = require('../controller/spec.controller');
 const app = express();
+app.use(cors())
 const port = config.SERVER_PORT;
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
