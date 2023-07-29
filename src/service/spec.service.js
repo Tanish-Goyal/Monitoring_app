@@ -15,20 +15,36 @@ const specService = {
     return spec;
   },
 
-  getSpecId: async (appId) => {
+  getSpecIdList: async (appId) => {
     
-    const SpecId = await Spec.aggregate([
+    const SpecInfo = await Spec.aggregate([
       {
         $match: { appId: appId },
       },
       {
         $group: {
           _id: null,
-          specId: { $addToSet: '$_id' },
+          specIdList: { $addToSet: '$_id' },
         }
       },
     ]);    
-    return SpecId[0].specId;
+    return SpecInfo[0].specIdList;
+  },
+
+  getSpecId: async (appId) => {
+    
+    const SpecInfo = await Spec.aggregate([
+      {
+        $match: { appId: appId },
+      },
+      {
+        $group: {
+          _id: null,
+          specIdList: { $addToSet: '$_id' },
+        }
+      },
+    ]);    
+    return SpecInfo[0].specIdList[0];
   },
 };
 
