@@ -31,18 +31,59 @@ const reportService = {
     return uniqueHostNames[0].hostNames;
   },
 
-  getReportList: async (appId, page, limit, hostName) => {
-    var reports = undefined;
+  getReportList: async (appId, page, limit,bundleStatus, hostName) => {
+    var filterObject = {};
     if ( hostName == undefined){
-      reports = await ReportModel.find({appId:appId}).skip((page-1)*limit).limit(limit).exec();
+      if( bundleStatus == undefined){
+        filterObject = {appId:appId};
+      }
+      else{
+        filterObject = {appId:appId, bundleStatus:bundleStatus};
+      }
     }
     else {
-      reports = await ReportModel.find({appId:appId,hostName:hostName}).skip((page-1)*limit).limit(limit).exec();
+      if( bundleStatus == undefined){
+        filterObject = {appId:appId, hostName:hostName};
+      }
+      else{
+        filterObject = {appId:appId, bundleStatus:bundleStatus, hostName:hostName};
+      }
     }
+    const reportsRawData = await ReportModel.aggregate([
+      {
+        $match: filterObject,
+      },
+      {
+        $facet: {
+          totalCount: [{ $count: 'count' }],
+          reportList: [{ $skip: page }, { $limit: limit }],
+        },
+      },
+    ]);
 
-    return reports;
+    const reportsFinalData = {
+      count: reportsRawData[0].totalCount[0]?.count || 0,
+      reportList: reportsRawData[0].reportList
+    } 
+
+    return reportsFinalData;
   },
   
+  getRecentReports: async (appId, numberOfReports, hostName) => {
+    var filterObject = {};
+
+    if( hostName == undefined){
+      filterObject = {appId:appId};
+    }
+    else{
+      filterObject = {appId:appId,hostName:hostName};
+    }
+
+    const reports = await ReportModel.find(filterObject).sort({_id:-1}).limit(numberOfReports).exec();
+    
+    return reports;
+  },
+
   updateReportStatus: async (bundleName, newStatus) => {
       const updatedReport = await ReportModel.findOneAndUpdate(
         { 

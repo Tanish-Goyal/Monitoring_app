@@ -31,6 +31,20 @@ router.put('', async (req, res) => {
   }
 });
 
+router.get('', async (req, res) => {
+  try {
+    const appId = req.query.appId || null;
+    const bundleStatus = req.query.bundleStatus || undefined;
+    const page = parseInt(req.query.page) || 0;
+    const limit = parseInt(req.query.limit) || 10;
+    const reports = await reportService.getReportList(appId, page, limit, bundleStatus);
+    res.json(reports);
+  } catch (err) {
+    logger.error(err);
+    res.status(500).send(err.message);
+  }
+});
+
 router.delete('/:reportId', async (req, res) => {
   try {
     const reportId = req.params.reportId;
@@ -51,7 +65,6 @@ router.get('/hosts', async (req, res) => {
       "hostnameList": hostnameList,
       "count": hostnameList.length
     };
-    // console.log(hostsInfo);
     res.json(hostsInfo);
 
   } catch (err) {
@@ -63,10 +76,26 @@ router.get('/hosts', async (req, res) => {
 router.get('/hosts/:hostname', async (req, res) => {
   try {
     const hostname = req.params.hostname;
+    const bundleStatus = req.query.bundleStatus || undefined;
     const appId = req.query.appId || null;
     const page = parseInt(req.query.page) || 0;
     const limit = parseInt(req.query.limit) || 10;
-    const reports = await reportService.getReportList(appId, page, limit, hostname);
+    const reports = await reportService.getReportList(appId, page, limit, bundleStatus, hostname);
+    res.json(reports);
+
+  } catch (err) {
+    logger.error(err);
+    res.status(500).send(err.message);
+  }
+}
+);
+
+router.get('/recent', async (req, res) => {
+  try {
+    const hostName = req.query.hostName || undefined;
+    const appId = req.query.appId || undefined;
+    const numberOfReports = parseInt(req.query.recent) || 5;
+    const reports = await reportService.getRecentReports(appId, numberOfReports, hostName);
     res.json(reports);
 
   } catch (err) {
@@ -81,19 +110,6 @@ router.get('/:reportId', async (req, res) => {
     const reportId = req.params.reportId;
     const report = await reportService.getReport(reportId);
     res.json(report);
-  } catch (err) {
-    logger.error(err);
-    res.status(500).send(err.message);
-  }
-});
-
-router.get('', async (req, res) => {
-  try {
-    const appId = req.query.appId || null;
-    const page = parseInt(req.query.page) || 0;
-    const limit = parseInt(req.query.limit) || 10;
-    const reports = await reportService.getReportList(appId, page, limit);
-    res.json(reports);
   } catch (err) {
     logger.error(err);
     res.status(500).send(err.message);
