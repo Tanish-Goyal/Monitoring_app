@@ -10,6 +10,7 @@ const projectController = require('../controller/project.controller');
 const bundleController = require('../controller/bundle.controller');
 const reportController = require('../controller/report.controller');
 const specController = require('../controller/spec.controller');
+const daemonController = require('../controller/daemon.controller');
 const app = express();
 app.use(cors())
 const port = config.SERVER_PORT;
@@ -34,6 +35,7 @@ app.use('/project',projectController);
 app.use('/report',reportController);
 app.use('/spec',specController);
 app.use('/bundle',bundleController);
+app.use('/daemon',daemonController);
 
 const startRestServer = ()=>{
   app.listen(port, () => {
