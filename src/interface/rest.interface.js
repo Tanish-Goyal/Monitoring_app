@@ -3,7 +3,8 @@
 const config = require('../utils/config');
 const express = require('express');
 const logger = require('../utils/logger');
-const cors = require('cors')
+const cors = require('cors');
+const path = require('path')
 const authController = require('../controller/auth.controller');
 const appController = require('../controller/app.controller')
 const projectController = require('../controller/project.controller');
@@ -36,6 +37,9 @@ app.use('/report',reportController);
 app.use('/spec',specController);
 app.use('/bundle',bundleController);
 app.use('/daemon',daemonController);
+// eslint-disable-next-line no-undef
+var uiPath = path.join(__dirname,'../public')
+app.use(express.static(uiPath))
 
 const startRestServer = ()=>{
   app.listen(port, () => {
