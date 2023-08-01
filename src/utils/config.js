@@ -9,7 +9,7 @@ const config = {
   REDIS_URL: process.env.REDIS_URL || 'redis://default:redispw@localhost:6379',
   UPLOAD_PATH: process.env.UPLOAD_PATH || 'c:/uploads',
   PROCESSED_PATH: process.env.PROCESSED_PATH || 'c:/unzipped',
-  DAEMON_PATH: process.env.DAEMON_PATH || 'c:/daemonbuilds'
+  DAEMON_PATH: process.env.DAEMON_PATH || 'c:/daemonbuilds',
 };
 
 module.exports = config;

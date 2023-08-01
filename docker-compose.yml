@@ -6,7 +6,9 @@ services:
     env_file:
       - .env
     volumes:
-      - uploads:/app/uploads
+      - uploads:/home/uploads
+      - processed:/home/processed
+      - daemon:/home/daemonbuilds
   redis:
     image: "redis:latest"
   mongo:
@@ -19,3 +21,5 @@ services:
       - "27017:27017"
 volumes:
   uploads:
+  processed:
+  daemon:

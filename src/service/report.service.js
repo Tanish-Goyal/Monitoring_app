@@ -16,19 +16,16 @@ const reportService = {
   },
   
   getUniqueHostNames: async (appId) => {
-  
+    
     const uniqueHostNames = await ReportModel.aggregate([
       {
-        $match: { appId: appId },
+         $match: { appId: appId },
       },
-      {
-        $group: {
-          _id: null,
-          hostNames: { $addToSet: '$hostName' },
-        }
-      },
-    ]);    
-    return uniqueHostNames[0].hostNames;
+      { $group: { _id: '$hostName' } },
+      { $project: { _id: 0, hostName: '$_id' } }
+    ])   
+    const hostNames = uniqueHostNames.map(item => item.hostName);
+    return hostNames;
   },
 
   getReportList: async (appId, page, limit,bundleStatus, hostName) => {
@@ -85,19 +82,17 @@ const reportService = {
   },
 
   updateReportStatus: async (bundleName, newStatus) => {
-      const updatedReport = await ReportModel.findOneAndUpdate(
+      await ReportModel.findOneAndUpdate(
         { 
           bundleName: bundleName
         },
         { 
-          $set: { status: newStatus }
+          $set: { bundleStatus: newStatus }
         },
         { 
           new: true
         }
       );
-    
-      return updatedReport;
     } 
   
 };
