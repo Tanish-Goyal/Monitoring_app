@@ -1,20 +1,25 @@
 const logger = require('../utils/logger');
-const config = require('../utils/config')
+const config = require('../utils/config');
+const pool = require('../workers/workers.interface');
+const reportService = require('../service/report.service');
+const path = require('path')
+
 const redisClient = require('redis').createClient({
   url: config.REDIS_URL
 })
 redisClient.connect()
-const processService = require('../service/process.service');
-const reportService = require('../service/report.service');
-const onMessage = async (bundleName) => {
+const onMessage = (bundleName) => {
   try{
-    await processService.untar(bundleName);
-    reportService.updateReportStatus(bundleName,"processed")
+    pool.exec('untar',[bundleName]).always(async ()=>{
+      bundleName = path.parse(bundleName).name;
+      bundleName = path.parse(bundleName).name;
+      await reportService.updateReportStatus(bundleName,"processed")
+    })
   }catch(err){
     logger.error(err)
   }
 };
-const newBundleNotifierSub =(channel)=>{
+const newBundleNotifierSub = (channel)=>{
   try {
     logger.info(`attempting to subscribe to channel 
     ${channel} in updatefeed trigger` );

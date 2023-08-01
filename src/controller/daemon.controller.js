@@ -44,6 +44,7 @@ router.get("/download/:appId", async(req,res)=>{
           const fileStream = fs.createReadStream(fileLocation);
       
           fileStream.on('open', () => {
+            res.setHeader('Access-Control-Expose-Headers','Content-Disposition')
             res.setHeader('Content-Type', 'application/octet-stream');
             res.setHeader('Content-Disposition', `attachment; filename=${appId}-${appName}`);
             fileStream.pipe(res);
@@ -62,7 +63,7 @@ router.get("/download/:appId", async(req,res)=>{
 router.post("/build/:appId",async(req,res)=>{
     try{
         const appId = req.params.appId;
-        const { cronstring } = req.body;
+        const cronstring = req.query.cronString;
         const baseurl = req.headers.host
         const command = Constants.getBuildCommand(appId,cronstring,baseurl)
         exec(command, (error, stdout, stderr) => {

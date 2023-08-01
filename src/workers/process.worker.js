@@ -1,10 +1,10 @@
 const fs = require('fs-extra');
 const constants = require('../utils/constants');
-//const logger = require('../utils/logger');
+const logger = require('../utils/logger');
 const zlib = require('zlib');
-//const path = require('path')
 const tar = require('tar');
-//const reportService = require('../service/report.service');
+const workerpool = require('workerpool');
+
 
 const processService = {
     untar: async (bundlename) => {
@@ -15,18 +15,17 @@ const processService = {
                 .pipe(zlib.createGunzip()) // Uncompress the .gz file
                 .pipe(tar.extract({ cwd: destDir })) // Extract the tar contents to the specified directory
                 .on('error', (err) => {
-                    console.error('Error occurred while untarring the file:', err);
+                    logger.error('Error occurred while untarring the file:', err);
                 })
-                .on('finish', async () => {
-                    // bundlePath = path.parse(bundlePath).name;
-                    // bundlePath = path.parse(bundlePath).name;
-                    // await reportService.updateReportStatus(bundlePath,"processed")
-                    console.info('File successfully untarred.');
+                .on('finish',() => {
+                    logger.info('File successfully untarred.');
                 });
         } catch (e) {
-            console.error(e.message);
+            logger.error(e.message);
         }
     }
 }
 
-module.exports = processService;
+workerpool.worker({
+    untar: processService.untar,
+  });

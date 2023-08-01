@@ -21,12 +21,12 @@ const Constants = {
         if(os.platform() == 'win32'){
             // eslint-disable-next-line no-undef
             var scriptPath = `${__dirname}/scripts/build-daemon.ps1`;
-            var command =`pwsh -ExecutionPolicy Bypass -File ${scriptPath} -appId "${appId}" -cronstring "${cronstring}" -baseurl "${baseurl}"`;
+            var command =`pwsh -ExecutionPolicy Bypass -File ${scriptPath} -appId "${appId}" -cronstring "${cronstring}" -baseurl "http://${baseurl}"`;
             return command
         }else{
             // eslint-disable-next-line no-undef
             scriptPath = `${__dirname}/scripts/build-daemon.sh`;
-            command =`${scriptPath} ${appId} ${cronstring} ${baseurl}`;
+            command =`${scriptPath} "${appId}" "${cronstring}" "http://${baseurl}"`;
             return command
         }
         
